@@ -1,0 +1,14 @@
+{
+  "name": "shoping-mall-monorepo",
+  "version": "1.0.0",
+  "description": "Shopping Mall Monorepo - Server deployment for Heroku",
+  "private": true,
+  "scripts": {
+    "start": "cd server && node index.js",
+    "postinstall": "cd server && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
