@@ -23,8 +23,19 @@ export const getApiUrl = (endpoint) => {
   // endpoint가 '/'로 시작하지 않으면 추가
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   
-  // API_BASE_URL이 있으면 사용, 없으면 상대 경로 반환
-  return API_BASE_URL ? `${API_BASE_URL}${normalizedEndpoint}` : normalizedEndpoint;
+  // API_BASE_URL이 없으면 상대 경로 반환
+  if (!API_BASE_URL) {
+    return normalizedEndpoint;
+  }
+  
+  // API_BASE_URL이 이미 '/api'로 끝나는 경우와 그렇지 않은 경우 처리
+  const baseUrl = API_BASE_URL.endsWith('/api') 
+    ? API_BASE_URL.slice(0, -4) // '/api' 제거
+    : API_BASE_URL.endsWith('/')
+    ? API_BASE_URL.slice(0, -1) // 마지막 '/' 제거
+    : API_BASE_URL;
+  
+  return `${baseUrl}${normalizedEndpoint}`;
 };
 
 /**
