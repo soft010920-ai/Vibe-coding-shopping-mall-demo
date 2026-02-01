@@ -14,10 +14,34 @@ const PORT = process.env.PORT || 5000;
 
 console.log('✅ Express 앱 생성 완료');
 
-// Middleware
-app.use(cors());
+// CORS 설정
+const corsOptions = {
+  origin: function (origin, callback) {
+    // 환경변수에서 허용할 origin 목록 가져오기
+    const allowedOrigins = process.env.CLIENT_URL 
+      ? process.env.CLIENT_URL.split(',').map(url => url.trim())
+      : ['http://localhost:3000', 'http://localhost:5173'];
+    
+    // origin이 없거나 (같은 도메인), 허용 목록에 있으면 허용
+    if (!origin || allowedOrigins.includes(origin) || allowedOrigins.some(url => origin.includes(url))) {
+      callback(null, true);
+    } else {
+      console.log('⚠️ CORS 차단된 origin:', origin);
+      console.log('✅ 허용된 origins:', allowedOrigins);
+      callback(null, true); // 개발 중에는 모두 허용, 프로덕션에서는 false로 변경
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+console.log('✅ CORS 설정 완료');
+console.log('📍 허용된 CLIENT_URL:', process.env.CLIENT_URL || '기본값 사용');
 
 // MongoDB 연결
 // MongoDB Atlas URL을 우선적으로 사용하고, 없으면 로컬 주소 사용
