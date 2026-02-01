@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import './AdminPage.css'
 import { STORAGE_KEYS, clearAuthStorage } from '../../utils/storage'
+import { getApiUrl } from '../../utils/api'
 
 export default function AdminPage({ onNavigateToMain, onNavigateToProductRegister, onNavigateToProductEdit }) {
   const [user, setUser] = useState(null)
@@ -62,7 +63,7 @@ export default function AdminPage({ onNavigateToMain, onNavigateToProductRegiste
       }
 
       try {
-        const response = await fetch('/api/auth/me', {
+        const response = await fetch(getApiUrl('/api/auth/me'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -113,7 +114,7 @@ export default function AdminPage({ onNavigateToMain, onNavigateToProductRegiste
       if (productFilters.status) params.append('status', productFilters.status)
       if (productFilters.search) params.append('search', productFilters.search)
 
-      const response = await fetch(`/api/products?${params.toString()}`, {
+      const response = await fetch(getApiUrl(`/api/products?${params.toString()}`), {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -161,7 +162,7 @@ export default function AdminPage({ onNavigateToMain, onNavigateToProductRegiste
       if (orderFilters.dateFrom) params.append('dateFrom', orderFilters.dateFrom)
       if (orderFilters.dateTo) params.append('dateTo', orderFilters.dateTo)
 
-      const response = await fetch(`/api/orders?${params.toString()}`, {
+      const response = await fetch(getApiUrl(`/api/orders?${params.toString()}`), {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -235,7 +236,7 @@ export default function AdminPage({ onNavigateToMain, onNavigateToProductRegiste
 
     try {
       const token = localStorage.getItem(STORAGE_KEYS.TOKEN)
-      const response = await fetch(`/api/orders/${orderId}`, {
+      const response = await fetch(getApiUrl(`/api/orders/${orderId}`), {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

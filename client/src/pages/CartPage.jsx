@@ -4,6 +4,7 @@ import TopBanner from '../components/TopBanner'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { STORAGE_KEYS, clearAuthStorage } from '../utils/storage'
+import { getApiUrl } from '../utils/api'
 
 export default function CartPage({ onNavigateToMain, onNavigateToLogin, onNavigateToSignup, onNavigateToAdmin, onNavigateToOrder, onNavigateToMyOrders }) {
   const [user, setUser] = useState(null)
@@ -31,7 +32,7 @@ export default function CartPage({ onNavigateToMain, onNavigateToLogin, onNaviga
       }
 
       try {
-        const response = await fetch('/api/auth/me', {
+        const response = await fetch(getApiUrl('/api/auth/me'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -71,7 +72,7 @@ export default function CartPage({ onNavigateToMain, onNavigateToLogin, onNaviga
 
     setCartLoading(true)
     try {
-      const response = await fetch('/api/cart', {
+      const response = await fetch(getApiUrl('/api/cart'), {
         method: 'GET',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -183,7 +184,7 @@ export default function CartPage({ onNavigateToMain, onNavigateToLogin, onNaviga
     if (!token) return
 
     try {
-      const response = await fetch(`/api/cart/${itemId}`, {
+      const response = await fetch(getApiUrl(`/api/cart/${itemId}`), {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -211,7 +212,7 @@ export default function CartPage({ onNavigateToMain, onNavigateToLogin, onNaviga
     if (!token) return
 
     try {
-      const response = await fetch(`/api/cart/${itemId}`, {
+      const response = await fetch(getApiUrl(`/api/cart/${itemId}`), {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`,

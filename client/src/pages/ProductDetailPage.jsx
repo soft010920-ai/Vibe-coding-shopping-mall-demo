@@ -4,6 +4,7 @@ import TopBanner from '../components/TopBanner'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { STORAGE_KEYS, clearAuthStorage } from '../utils/storage'
+import { getApiUrl } from '../utils/api'
 
 export default function ProductDetailPage({ productId, onNavigateToMain, onNavigateToLogin, onNavigateToCart, onNavigateToMyOrders }) {
   const [user, setUser] = useState(null)
@@ -40,7 +41,7 @@ export default function ProductDetailPage({ productId, onNavigateToMain, onNavig
       }
 
       try {
-        const response = await fetch('/api/auth/me', {
+        const response = await fetch(getApiUrl('/api/auth/me'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -79,7 +80,7 @@ export default function ProductDetailPage({ productId, onNavigateToMain, onNavig
       }
 
       try {
-        const response = await fetch('/api/cart', {
+        const response = await fetch(getApiUrl('/api/cart'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -115,7 +116,7 @@ export default function ProductDetailPage({ productId, onNavigateToMain, onNavig
       
       setProductLoading(true)
       try {
-        const response = await fetch(`/api/products/${productId}`, {
+        const response = await fetch(getApiUrl(`/api/products/${productId}`), {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -254,7 +255,7 @@ export default function ProductDetailPage({ productId, onNavigateToMain, onNavig
       console.log('장바구니 추가 요청:', requestBody)
       console.log('상품 정보:', { id: product._id, name: product.name, price: product.price })
 
-      const response = await fetch('/api/cart', {
+      const response = await fetch(getApiUrl('/api/cart'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -266,7 +267,7 @@ export default function ProductDetailPage({ productId, onNavigateToMain, onNavig
       if (response.ok) {
         const data = await response.json()
         // 장바구니 개수 업데이트
-        const countResponse = await fetch('/api/cart', {
+        const countResponse = await fetch(getApiUrl('/api/cart'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,

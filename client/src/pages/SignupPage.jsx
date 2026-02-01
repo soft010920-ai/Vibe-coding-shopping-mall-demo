@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { validateSignupForm } from '../utils/signupValidation'
+import { getApiUrl } from '../utils/api'
 
 export default function SignupPage({ onNavigateToMain }) {
   const emptyForm = {
@@ -74,7 +75,7 @@ export default function SignupPage({ onNavigateToMain }) {
         address: fullAddress,
       }
 
-      const response = await fetch('/api/users', {
+      const response = await fetch(getApiUrl('/api/users'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),

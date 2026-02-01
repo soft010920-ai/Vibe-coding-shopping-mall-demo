@@ -4,6 +4,7 @@ import TopBanner from '../components/TopBanner'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { STORAGE_KEYS, clearAuthStorage } from '../utils/storage'
+import { getApiUrl } from '../utils/api'
 
 export default function OrderPage({ 
   cartItemIds, 
@@ -81,7 +82,7 @@ export default function OrderPage({
       }
 
       try {
-        const response = await fetch('/api/auth/me', {
+        const response = await fetch(getApiUrl('/api/auth/me'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -131,7 +132,7 @@ export default function OrderPage({
 
       setCartLoading(true)
       try {
-        const response = await fetch('/api/cart', {
+        const response = await fetch(getApiUrl('/api/cart'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -323,7 +324,7 @@ export default function OrderPage({
     console.log('주문 요청 데이터:', JSON.stringify(orderData, null, 2))
 
     try {
-      const response = await fetch('/api/orders', {
+      const response = await fetch(getApiUrl('/api/orders'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './LoginPage.css'
+import { getApiUrl } from '../utils/api'
 
 export default function LoginPage({ onNavigateToMain, onNavigateToSignup }) {
   const [formData, setFormData] = useState({
@@ -53,7 +54,7 @@ export default function LoginPage({ onNavigateToMain, onNavigateToSignup }) {
 
     try {
       // 서버의 /api/auth/login 엔드포인트 호출
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(getApiUrl('/api/auth/login'), {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json'
@@ -146,7 +147,7 @@ export default function LoginPage({ onNavigateToMain, onNavigateToSignup }) {
 
       // 토큰이 있으면 유효성 검증
       try {
-        const response = await fetch('/api/auth/me', {
+        const response = await fetch(getApiUrl('/api/auth/me'), {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
