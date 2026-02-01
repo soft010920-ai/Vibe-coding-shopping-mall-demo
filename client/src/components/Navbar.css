@@ -1,0 +1,39 @@
+/* Navbar 컴포넌트 스타일 */
+
+.nav-link-btn.admin-btn {
+  background-color: #ff6b35 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.nav-link-btn.admin-btn:hover {
+  background-color: #e55a2b !important;
+}
+
+/* 장바구니 버튼 */
+.cart-btn {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #e53e3e;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 20px;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+
+.cart-badge:empty {
+  display: none;
+}
