@@ -1,3 +1,8 @@
+// 서버 시작 로그
+console.log('🚀 서버 시작 중...');
+console.log('📍 현재 디렉토리:', process.cwd());
+console.log('📦 Node 버전:', process.version);
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -6,6 +11,8 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+console.log('✅ Express 앱 생성 완료');
 
 // Middleware
 app.use(cors());
@@ -16,6 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 // MongoDB Atlas URL을 우선적으로 사용하고, 없으면 로컬 주소 사용
 const MONGODB_URI = process.env.MONGODB_ATLAS_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/shoping-mall';
 
+// MongoDB 연결 (비동기, 서버는 MongoDB 연결 실패해도 시작)
 mongoose.connect(MONGODB_URI)
   .then(() => {
     const connectionType = process.env.MONGODB_ATLAS_URI ? 'MongoDB Atlas' : process.env.MONGODB_URI ? 'MongoDB (Custom URI)' : 'MongoDB Local';
@@ -23,6 +31,7 @@ mongoose.connect(MONGODB_URI)
   })
   .catch((error) => {
     console.error('❌ MongoDB 연결 실패:', error);
+    console.error('⚠️ 서버는 계속 실행되지만 데이터베이스 기능이 작동하지 않을 수 있습니다.');
   });
 
 // 기본 라우트
@@ -30,14 +39,48 @@ app.get('/', (req, res) => {
   res.json({ 
     message: 'Shopping Mall API Server',
     status: 'running',
-    version: '1.0.0'
+    version: '1.0.0',
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
+});
+
+// 헬스 체크 엔드포인트
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
   });
 });
 
 // API 라우트
 app.use('/api', router);
 
+// 에러 핸들링 미들웨어
+app.use((err, req, res, next) => {
+  console.error('서버 오류:', err);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal Server Error',
+    status: 'error'
+  });
+});
+
 // 서버 시작
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🌐 Server URL: http://localhost:${PORT}`);
+}).on('error', (err) => {
+  console.error('❌ 서버 시작 실패:', err);
+  process.exit(1);
+});
+
+// 프로세스 에러 핸들링
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
 });
